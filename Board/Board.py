@@ -1,8 +1,9 @@
-from Coordinates.ShipCoordinates import ShipCoordinates
+from Board.ITile import ITile
+from IBoard import IBoard
 
-class Board():
-	def __init__(self, grid:list[ShipCoordinates]):
+class Board(IBoard):
+	def __init__(self, grid:list[ITile]):
 		self.__grid = grid
 
-	def getGrid(self) -> list[ShipCoordinates]:
+	def getGrid(self) -> list[ITile]:
 		return self.__grid
