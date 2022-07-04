@@ -1,5 +1,10 @@
-from Board.ITile import ITile
-from IBoard import IBoard
+from Tile import ITile
+from abc import ABC,abstractmethod
+
+class IBoard(ABC):
+	@abstractmethod
+	def getGrid(self) -> list[ITile]:
+		pass
 
 class Board(IBoard):
 	def __init__(self, grid:list[ITile]):
