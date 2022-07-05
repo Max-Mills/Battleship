@@ -3,32 +3,42 @@ from Game import Game
 from Tile import Tile, ITile
 from Board import Board, IBoard
 from Player import Player, IPlayer
-from Ship import Ship, IShip
+from Ship import Ship, IShip, ShipType
 from GameTypes import GameType
 from Game import Game
+from Settings import ISettings, BattleshipSettings
 
 class Factory:
 
-	def makeCoordinate(format: GameType) -> ICoordinates:
-		if format == GameType.Battleship:
-			return xyCoordinates
-		elif format == GameType.Battlesub:
-			return xyzCoordinates
+	def makeCoordinate(format: str, *args) -> ICoordinates:
+		if format == GameType.Battleship.name:
+			return xyCoordinates(args)
+		elif format == GameType.Battlesub.name:
+			return xyzCoordinates(args)
 		else:
 			print (f"{format} is unknown game type")
 
-	def makeShipCoordinates() -> ITile:
-		return Tile
+	def makeShipCoordinates(coordinates: ICoordinates, pieceID: str, pieceSection: int) -> ITile:
+		return Tile(coordinates, pieceID, pieceSection)
 
-	def makeBoard() -> IBoard:
-		return Board
+	def makeBoard(grid:list[ITile]) -> IBoard:
+		return Board(grid)
 
-	def makePlayer() -> IPlayer:
-		return Player
+	def makePlayer(id: str, ships: list[IShip], playBoard: IBoard, trackingBoard: IBoard) -> IPlayer:
+		return Player(id, ships, playBoard, trackingBoard)
 
-	def makeShip() -> IShip:
-		return Ship
+	def makeShip(id: str, name: ShipType, hitParts: list[bool]) -> IShip:
+		return Ship(id, name, hitParts)
 
-	def makeGame() -> Game:
-		return Game
+	def makeGame(settings: ISettings) -> Game:
+		return Game(settings)
+
+	def makeSettings(format: str) -> ISettings:
+		if format == GameType.Battleship.name:
+			return BattleshipSettings(0)
+		elif format == GameType.Battlesub.name:
+			pass
+		else:
+			print (f"{format} is unknown game type")
+			
 

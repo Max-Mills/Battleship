@@ -1,8 +1,7 @@
-
+from GameSystem import startGame
 
 def main():
-	game = Game()
-	game.startGame()
+	startGame()
 
 if __name__ == "__main__":
     main()

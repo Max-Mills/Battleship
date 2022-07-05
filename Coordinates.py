@@ -7,15 +7,15 @@ class ICoordinates(ABC):
 
 class xyCoordinates(ICoordinates):
 
-	def __init__ (self, x: int, y: int):
-		self.__points = str(x) + " " + str(y)
+	def __init__ (self, xy: tuple):
+		self.__points = str(xy[0]) + " " + str(xy[1])
 
 	def getCoordinates(self) -> str:
 		return self.__points
 
 class xyzCoordinates(ICoordinates):
-	def __init__ (self, x: int, y: int, z: int):
-		self.__points = str(x) + " " + str(y) + " " + str(z)
+	def __init__ (self, xyz: tuple):
+		self.__points = str(xyz[0]) + " " + str(xyz[1]) + " " + str(xyz[2])
 
 	def getCoordinates(self) -> str:
 		return self.__points

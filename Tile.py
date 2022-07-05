@@ -3,15 +3,15 @@ from abc import ABC, abstractmethod
 
 class ITile(ABC):
 	@abstractmethod
-	def setShipPartID(self, shipPartId: str):
-		pass
-
-	@abstractmethod
 	def getCoordinates(self) -> ICoordinates:
 		pass
 
 	@abstractmethod
-	def getShipPartID(self) -> str:
+	def getPieceSection(self) -> int:
+		pass
+
+	@abstractmethod
+	def getPieceID(self) -> str:
 		pass
 
 	@abstractmethod
@@ -25,6 +25,7 @@ class ITile(ABC):
 	@abstractmethod
 	def setPieceID(self, pieceID: str):
 		pass
+		
 
 class Tile(ITile):
 	def __init__(self, coordinates: ICoordinates, pieceID: str, pieceSection: int, isHit:bool = None):

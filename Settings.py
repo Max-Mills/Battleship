@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from enum import Enum
 
 class ISettings(ABC):
 
@@ -10,22 +11,22 @@ class ISettings(ABC):
 	def setSetting(setting: str, value: int):
 		pass
 
+class OptionsBattleshipSettings(Enum):
+	Measurements = "__measurement"
+
 class BattleshipSettings(ISettings):
 
-	def __init__(self, measurement: int):
+	def __init__(self, measurement: int = 0):
 		self.__measurement = measurement
 
-	def setSetting(self, setting: str, value: int):
-		if setting == "measurement":
-			self.__measurement = value
-		print(f"{setting} does not exist")
+	def setSetting(self, settingName: str, value: int):
+		setattr(self, settingName, value)
 
-	def getSetting(self, setting: str) -> int:
-		if setting == "measurement":
-			return self.__measurement
-		print(f"{setting} does not exist")
+	def getSetting(self, settingName: str) -> int:
+		return getattr(self, settingName)
 		
 
+		
 
 
 
