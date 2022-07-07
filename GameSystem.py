@@ -1,14 +1,17 @@
 from Factory import Factory
-from Game import Game
 from Ship import ShipType
 from Settings import OptionsBattleshipSettings
 from GameTypes import GameType
-from Tile import Tile
+from Game import Game
 
 def startGame():
 	playerNames, settings = gameSettings()
 	game = Factory.makeGame(settings)
 	setupGame(playerNames, game)
+	printBoards(game)
+	game.getPlayers()[0].getPlayBoard().getGrid()[2].setPieceID(1234)
+	print(game.getPlayers()[0].getPlayBoard().getGrid()[2].hitTile())
+
 	printBoards(game)
 
 def testGameSettings():
@@ -21,7 +24,7 @@ def testGameSettings():
 
 
 def gameSettings():
-	gameType = input("Welcome to Battleship\n Choose your Gametype:\n")
+	gameType = input("Welcome to Battleship\n Choose your Gametype: \n - Battleship \n\n")
 	settings = Factory.makeSettings(gameType)
 	measurement = input("\nHow many tiles will each dimension be:\n")
 	settings.setSetting(OptionsBattleshipSettings.Measurements.name, measurement)
@@ -57,21 +60,14 @@ def build2DBoards(measurements: int):
 	for i in range(0, measurements, 1):
 		for j in range(0, measurements, 1):
 			coordinate = Factory.makeCoordinate(GameType.Battleship.name, i, j)
-			shipCoords = Factory.makeShipCoordinates(coordinate, None, None)
-			grid.append(shipCoords)
+			tile = Factory.makeTile(coordinate, None, None)
+			grid.append(tile)
 	board = Factory.makeBoard(grid)
 	return board, board
 
 def printBoards(game: Game):
 	players = game.getPlayers()
 	for p in players:
-		boardString = p.getID() + ":  \n"
-		grid = p.getPlayBoard().getGrid()
-		row = '0'
-		for t in grid:
-			coords = t.getCoordinates().getCoordinates()
-			if row != coords[0]:
-				boardString = boardString + "\n"
-				row = coords[0]
-			boardString = boardString + "[" + str(coords) +"]"
-		print(boardString)
+		playerString = p.getID() + ":  \n"
+		grid = p.getPlayBoard().printBoard()
+		print (playerString + grid)

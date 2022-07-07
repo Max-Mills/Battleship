@@ -18,7 +18,7 @@ class Factory:
 		else:
 			print (f"{format} is unknown game type")
 
-	def makeShipCoordinates(coordinates: ICoordinates, pieceID: str, pieceSection: int) -> ITile:
+	def makeTile(coordinates: ICoordinates, pieceID: str, pieceSection: int) -> ITile:
 		return Tile(coordinates, pieceID, pieceSection)
 
 	def makeBoard(grid:list[ITile]) -> IBoard:

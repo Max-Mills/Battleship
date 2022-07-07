@@ -15,7 +15,7 @@ class ITile(ABC):
 		pass
 
 	@abstractmethod
-	def getIsHit(self):
+	def getIsHit(self) -> bool:
 		pass
 	
 	@abstractmethod
@@ -43,15 +43,17 @@ class Tile(ITile):
 	def getPieceID(self) -> str:
 		return self.__pieceID
 
-	def getIsHit(self):
+	def getIsHit(self) -> bool:
 		return self.__isHit
 	
 	def hitTile(self) -> bool:
 		if self.__isHit != None:
 			return None
 		elif self.__pieceID != None:
+			self.__isHit = True
 			return True
 		elif self.__pieceID == None:
+			self.__isHit = False
 			return False
 		else:
 			print("Something went wrong")
