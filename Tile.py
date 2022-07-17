@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class ITile(ABC):
 	@abstractmethod
-	def getCoordinates(self) -> ICoordinates:
+	def getCoordinates(self) -> str:
 		pass
 
 	@abstractmethod
@@ -25,6 +25,10 @@ class ITile(ABC):
 	@abstractmethod
 	def setPieceID(self, pieceID: str):
 		pass
+
+	@abstractmethod
+	def setIsHit(self, bool: bool):
+		pass
 		
 
 class Tile(ITile):
@@ -34,8 +38,8 @@ class Tile(ITile):
 		self.__pieceSection = pieceSection
 		self.__isHit = isHit
 
-	def getCoordinates(self) -> ICoordinates:
-		return self.__coordinates
+	def getCoordinates(self) -> str:
+		return self.__coordinates.getCoordinates()
 
 	def getPieceSection(self) -> int:
 		return self.__pieceSection
@@ -45,6 +49,9 @@ class Tile(ITile):
 
 	def getIsHit(self) -> bool:
 		return self.__isHit
+
+	def setIsHit(self, bool: bool):
+		self.__isHit = bool
 	
 	def hitTile(self) -> bool:
 		if self.__isHit != None:

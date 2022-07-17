@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from Ship import IShip
 from Board import IBoard
+from Tile import ITile
+from PlayerSystem import placeShip, printBoard, attemptHit, damageShip
 
 class IPlayer(ABC):
 	@abstractmethod
@@ -35,6 +37,22 @@ class IPlayer(ABC):
 	def setTrackingBoard(self, trackingBoard: IBoard):
 		pass
 
+	@abstractmethod
+	def placeShip(self, coords: str, ship: str, directon: str):
+		pass
+
+	@abstractmethod
+	def printBoard(self):
+		pass
+
+	@abstractmethod
+	def attemptHit(self, opponentTile: ITile) -> str:
+		pass
+
+	@abstractmethod
+	def damageShip(self, pieceID: str):
+		pass
+
 class Player(IPlayer):
 
 	def __init__(self, id: str, ships: list[IShip], playBoard: IBoard, trackingBoard: IBoard):
@@ -67,4 +85,16 @@ class Player(IPlayer):
 	def setTrackingBoard(self, trackingBoard: IBoard):
 		self.__trackingBoard = trackingBoard
 
+	def printBoard(self):
+		printBoard(self.getID(), self.getTrackingBoad(), self.getPlayBoard())
 
+	def placeShip(self, coords: str, ship: str, directon: str):
+		placeShip(coords, ship, self.getPlayBoard(), directon)
+
+	def attemptHit(self, opponentTile: ITile) -> str:
+		return attemptHit(self.getTrackingBoad(), opponentTile)
+
+	def damageShip(self, pieceID: str):
+		damageShip(self.getShips(), pieceID)
+
+		

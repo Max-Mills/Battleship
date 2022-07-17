@@ -1,19 +1,51 @@
-from Factory import Factory
-from Ship import ShipType
+from GameFactory import Factory
+from GameBuilder import build2DBoards, buildShips
 from Settings import OptionsBattleshipSettings
-from GameTypes import GameType
 from Game import Game
+from Ship import Ship
 
 def startGame():
-	playerNames, settings = gameSettings()
+	playerNames, settings = testGameSettings()
 	game = Factory.makeGame(settings)
 	setupGame(playerNames, game)
-	printBoards(game)
-	game.getPlayers()[0].getPlayBoard().getGrid()[2].setPieceID(1234)
-	print(game.getPlayers()[0].getPlayBoard().getGrid()[2].hitTile())
+	gameLoop(game, playerNames)
 
-	printBoards(game)
+def gameLoop(game: Game, playerNames: list):
+	player1 = game.getPlayers()[0]
+	player2 = game.getPlayers()[1]
+	currentPlayer = player1
+	otherPlayer = player2
+	i = 0
+	player2.placeShip("j6", "Patrol", "left")
+	gameOver = False
+	while gameOver == False:
+		coords = input("What coords are you attempting to hit? example: A10\n")
+		pieceid = currentPlayer.attemptHit(otherPlayer.getPlayBoard().getTile(coords))
+		if pieceid != None:
+			otherPlayer.damageShip(pieceid)
+		printPlayerBoard(game, currentPlayer.getID())
+		gameOver = checkGameOver(otherPlayer.getShips())
 
+		if gameOver == True:
+			print(f"{currentPlayer.getID()} has won!")
+			break
+
+		if currentPlayer == player1:
+			currentPlayer = player2
+			otherPlayer = player1
+		else:
+			currentPlayer = player1
+			otherPlayer = player2
+		i = i + 1
+
+def checkGameOver(ships: list[Ship]):
+	for s in ships:
+		for hp in s.getHitParts():
+			if hp == False:	
+				return False		
+	return True
+	
+			
 def testGameSettings():
 	settings = Factory.makeSettings("Battleship")
 	settings.setSetting(OptionsBattleshipSettings.Measurements.name, "10")
@@ -21,7 +53,6 @@ def testGameSettings():
 	playerNames.append("max")
 	playerNames.append("samara")
 	return playerNames, settings
-
 
 def gameSettings():
 	gameType = input("Welcome to Battleship\n Choose your Gametype: \n - Battleship \n\n")
@@ -37,37 +68,18 @@ def gameSettings():
 		playerNum += 1
 	return playerNames, settings
 
-def setupGame(playerNames, game):
+def setupGame(playerNames: list, game: Game):
 	for player in playerNames:
 		ships = buildShips(player)
 		board, board2 = build2DBoards(int(game.getSetting(OptionsBattleshipSettings.Measurements.name)))
 		playerObject = Factory.makePlayer(player, ships, board, board2)
 		game.addPlayer(playerObject)
 
-def buildShips(player):
-	ships = []
-	for sType in ShipType:
-		id = player + sType.name
-		hitParts: list[bool] = []
-		for _ in range(0, sType.value, 1):
-			hitParts.append(False)
-		ship = Factory.makeShip(id, sType.name, hitParts)
-		ships.append(ship)
-	return ships
-
-def build2DBoards(measurements: int):
-	grid = []
-	for i in range(0, measurements, 1):
-		for j in range(0, measurements, 1):
-			coordinate = Factory.makeCoordinate(GameType.Battleship.name, i, j)
-			tile = Factory.makeTile(coordinate, None, None)
-			grid.append(tile)
-	board = Factory.makeBoard(grid)
-	return board, board
-
-def printBoards(game: Game):
+def printPlayerBoard(game: Game, playerName: str):
 	players = game.getPlayers()
 	for p in players:
-		playerString = p.getID() + ":  \n"
-		grid = p.getPlayBoard().printBoard()
-		print (playerString + grid)
+		if p.getID() == playerName:
+			p.printBoard()
+			return
+	print(f"Player {playerName} not found")
+	

@@ -1,4 +1,3 @@
-import string
 from Tile import ITile
 from abc import ABC,abstractmethod
 
@@ -8,7 +7,11 @@ class IBoard(ABC):
 		pass
 
 	@abstractmethod
-	def printBoard(self) -> string:
+	def printBoard(self) -> str:
+		pass
+
+	@abstractmethod
+	def getTile(self, coords: str) -> ITile:
 		pass
 
 class Board(IBoard):
@@ -18,14 +21,23 @@ class Board(IBoard):
 	def getGrid(self) -> list[ITile]:
 		return self.__grid
 
+	def getTile(self, coords: str) -> ITile:
+		coords = coords[0].capitalize() + coords[1:]
+		for t in self.__grid:
+			if t.getCoordinates() == coords:
+				return t
+
 	def printBoard(self):
 		grid = self.getGrid()
+		gridLength = int(pow(len(grid),0.5))
 		row = '0'
-		boardString = ""
+		boardString = "   "
+		for i in range(0, gridLength):
+			boardString = boardString + str(i + 1) + "  "
 		for t in grid:
-			coords = t.getCoordinates().getCoordinates()
+			coords = t.getCoordinates()
 			if row != coords[0]:
-				boardString = boardString + "\n"
+				boardString = boardString + "\n" + coords[0] + " "
 				row = coords[0]
 			if t.getIsHit() == True:
 				item = "X"
@@ -35,7 +47,8 @@ class Board(IBoard):
 				item = "/"
 			else:
 				item = " "
-			boardString = boardString + "[" + item +"]"
+				#item = (ord(coords[0]) * gridLength) + int(coords[1])
+			boardString = boardString + "[" + str(item) +"]"
 		return boardString
 		
 

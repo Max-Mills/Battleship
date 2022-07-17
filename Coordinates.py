@@ -8,7 +8,7 @@ class ICoordinates(ABC):
 class xyCoordinates(ICoordinates):
 
 	def __init__ (self, xy: tuple):
-		self.__points = str(xy[0]) + " " + str(xy[1])
+		self.__points = str(xy[0]) + str(xy[1])
 
 	def getCoordinates(self) -> str:
 		return self.__points

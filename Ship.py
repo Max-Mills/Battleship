@@ -15,10 +15,10 @@ class IShip(ABC):
 		pass
 
 	@abstractmethod
-	def changeHitParts(self, shipPartIndex):
+	def changeHitParts(self, shipPartIndex: int):
 		pass
 
-class Ship:
+class Ship(IShip):
 	def __init__(self, id: str, name: ShipType, hitParts: list[bool]):
 		self.__id = id
 		self.__name = name
@@ -33,6 +33,5 @@ class Ship:
 	def getHitParts(self):
 		return self.__hitParts
 
-	def changeHitParts(self, shipPartIndex):
+	def changeHitParts(self, shipPartIndex: int):
 		self.__hitParts[shipPartIndex] = True
-		print(f"{self.__name} has been hit")
