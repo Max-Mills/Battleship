@@ -8,10 +8,11 @@ def printBoard(id: str, trackingBoard: IBoard, playerBoard: IBoard):
 	grid2 = playerBoard.printBoard()
 	print (playerString + "\n  Tracking Board: \n" + grid1 +"\n\n" + "  Player Board\n" + grid2 +"\n\n")
 
-def placeShip(coords: str, ship: str, playerBoard: IBoard, direction: str):
+def placeShip(coords: str, ship: str, playerBoard: IBoard, direction: str) -> bool:
 	gridLength = pow(len(playerBoard.getGrid()),0.5)
 	shipSize=ShipType[ship].value
 	coords = coords[0].capitalize() + coords[1:]
+	direction = direction.upper()
 	y = ord(coords[0]) - 64
 	x = int(coords[1:])
 
@@ -19,14 +20,14 @@ def placeShip(coords: str, ship: str, playerBoard: IBoard, direction: str):
 		print ("You are outside the range of the board")
 		return
 
-	if direction == "up":
-		tiles = checkIfPlacementValid(playerBoard, -1, "hor", shipSize, coords, y)
-	elif direction == "down":
-		tiles = checkIfPlacementValid(playerBoard, 1, "hor", shipSize, coords, y)
-	elif direction == "left":
-		tiles = checkIfPlacementValid(playerBoard, -1, "ver", shipSize, coords, x)
-	elif direction == "right":
-		tiles = checkIfPlacementValid(playerBoard, 1, "ver", shipSize, coords, x)
+	if direction == "UP":
+		tiles = checkIfPlacementValid(playerBoard, -1, "hor", shipSize, coords, y, gridLength)
+	elif direction == "DOWN":
+		tiles = checkIfPlacementValid(playerBoard, 1, "hor", shipSize, coords, y, gridLength)
+	elif direction == "LEFT":
+		tiles = checkIfPlacementValid(playerBoard, -1, "ver", shipSize, coords, x, gridLength)
+	elif direction == "RIGHT":
+		tiles = checkIfPlacementValid(playerBoard, 1, "ver", shipSize, coords, x, gridLength)
 	else:
 		print("invalid direction")
 		return False
@@ -39,19 +40,18 @@ def placeShip(coords: str, ship: str, playerBoard: IBoard, direction: str):
 		t.setPieceID(str(hp) + ship)
 		hp = hp + 1
 
+	return True
 
-def checkIfPlacementValid(playerBoard: IBoard, posOrNeg: int, horOrVer: str, shipSize: int, coords: str, xOrY: int):
+
+def checkIfPlacementValid(playerBoard: IBoard, posOrNeg: int, horOrVer: str, shipSize: int, coords: str, xOrY: int, gridLength: int):
 	tiles: list[ITile] = []
-	if not xOrY + (-1 * shipSize) >= 0:
+	if not xOrY + (posOrNeg * shipSize) >= 0 or not xOrY + (posOrNeg * shipSize) <= gridLength:
 		print("ship does not fit here")
 		return False
 
 	for _ in range(0, shipSize):
 		tile = playerBoard.getTile(coords)
 		tiles.append(tile)
-		#if tile == None:
-			#print("ship does not fit there")
-			#return False
 		if tile.getPieceID() != None:
 			print("ship is there")
 			return False
@@ -61,6 +61,7 @@ def checkIfPlacementValid(playerBoard: IBoard, posOrNeg: int, horOrVer: str, shi
 			coords=coords[0]+str(int(coords[1:])+posOrNeg)
 		else:
 			print("Something went wrong")
+			return False
 	return tiles
 
 def attemptHit(trackingBoard: IBoard, opponentTile: ITile) -> str:
@@ -68,14 +69,15 @@ def attemptHit(trackingBoard: IBoard, opponentTile: ITile) -> str:
 	if isHit == False:
 		print("Miss")
 		trackingBoard.getTile(opponentTile.getCoordinates()).setIsHit(False)
-		return None
+		return True
 	elif isHit == True:
 		print("Hit!")
 		trackingBoard.getTile(opponentTile.getCoordinates()).setIsHit(True)
 		return opponentTile.getPieceID()
 	else:
-		print("Something broke")
+		print("You've already shot here")
 		return False
+	return None
 
 def damageShip(ships: list[IShip], pieceID: str):
 	nameOfShip = pieceID[1:]

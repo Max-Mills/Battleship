@@ -38,7 +38,7 @@ class IPlayer(ABC):
 		pass
 
 	@abstractmethod
-	def placeShip(self, coords: str, ship: str, directon: str):
+	def placeShip(self, coords: str, ship: str, directon: str) -> bool:
 		pass
 
 	@abstractmethod
@@ -88,8 +88,8 @@ class Player(IPlayer):
 	def printBoard(self):
 		printBoard(self.getID(), self.getTrackingBoad(), self.getPlayBoard())
 
-	def placeShip(self, coords: str, ship: str, directon: str):
-		placeShip(coords, ship, self.getPlayBoard(), directon)
+	def placeShip(self, coords: str, ship: str, directon: str) -> bool:
+		return placeShip(coords, ship, self.getPlayBoard(), directon)
 
 	def attemptHit(self, opponentTile: ITile) -> str:
 		return attemptHit(self.getTrackingBoad(), opponentTile)
